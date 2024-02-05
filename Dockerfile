@@ -60,7 +60,7 @@ COPY --from=dockerizer /ca-gateway_root /
 # Does this make sense for gateway? So that providing -cip for the gateway command is optional?
 ENV EPICS_CA_AUTO_ADDR_LIST=YES
 
-ENV PATH=/
+ENV PATH=/:$PATH
 
 WORKDIR /epics
 
