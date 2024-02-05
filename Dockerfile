@@ -51,13 +51,11 @@ RUN dockerize -L preserve -n -u scs -o /ca-gateway_root --verbose /epics/gateway
 ## =========================================
 #  4th stage: Finally put together our image
 #             from scratch for minimal size.
-FROM scratch AS final
+FROM alpine:latest AS final
 
 USER scs
 
 COPY --from=dockerizer /ca-gateway_root /
-COPY --from=dockerizer /usr/bin /usr/bin
-COPY --from=dockerizer /bin /bin
 
 # Does this make sense for gateway? So that providing -cip for the gateway command is optional?
 ENV EPICS_CA_AUTO_ADDR_LIST=YES
