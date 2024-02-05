@@ -56,11 +56,13 @@ FROM scratch AS final
 USER scs
 
 COPY --from=dockerizer /ca-gateway_root /
+COPY --from=dockerizer /usr/bin /usr/bin
+COPY --from=dockerizer /bin /bin
 
 # Does this make sense for gateway? So that providing -cip for the gateway command is optional?
 ENV EPICS_CA_AUTO_ADDR_LIST=YES
 
-ENV PATH=/:$PATH
+ENV PATH=/:/usr/bin:/bin
 
 WORKDIR /epics
 
