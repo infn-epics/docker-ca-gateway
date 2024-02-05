@@ -4,7 +4,7 @@ FROM alpine AS download-extract
 ARG REVISION=R2-1-3-0 
 
 RUN apk update && apk add git
-RUN git clone --branch ${REVISION}} --depth 1 -c advice.detachedHead=false \
+RUN git clone --branch ${REVISION} --depth 1 -c advice.detachedHead=false \
       https://github.com/epics-extensions/ca-gateway.git /ca-gateway
 RUN rm -rf /ca-gateway/.git
 
