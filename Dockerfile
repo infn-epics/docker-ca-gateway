@@ -69,6 +69,6 @@ ENV PATH=/ca-tools:/usr/bin:/bin:/epics
 
 WORKDIR /ca-tools
 
-ENTRYPOINT ["/ca-tools/gateway"]
+CMD ["/ca-tools/gateway"]
 #CMD ["-h"]
 #CMD ["-help"]
