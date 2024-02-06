@@ -24,7 +24,12 @@ RUN cd /ca-gateway \
 ## ===============================
 FROM ubuntu:22.04 AS base
 COPY --from=builder /epics/ /epics
-
-CMD ["/epics/ca-gateway/gateway"]
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+    libreadline8 \
+    && rm -rf /var/lib/apt/lists/* 
+    
+ENV PATH=/epics/ca-gateway/bin/linux-x86_64/:/epics/epics-base/bin/linux-x86_64/:$PATH
+CMD ["/epics/ca-gateway/bin/linux-x86_64/gateway"]
 #CMD ["-h"]
 #CMD ["-help"]
