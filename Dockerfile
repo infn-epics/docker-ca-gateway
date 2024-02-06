@@ -47,11 +47,11 @@ RUN mv /epics/ca-gateway/bin/*/gateway /epics/ ; find / -name "caRepeater" -exec
 # Dockerize
 RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/ \
  && find /ca-tools/ -ls \
- && rm /ca-tools/Dockerfile 
- 
+ && rm /ca-tools/Dockerfile \
+ && chown -R scs:users /ca-tools/
+
 
  # /epics is owned by scs in this image and should also be in later one:
- && chown -R scs:users /ca-tools/
 
 
 
