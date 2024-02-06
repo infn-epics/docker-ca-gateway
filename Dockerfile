@@ -56,10 +56,10 @@ RUN dockerize -L preserve -n -u scs -o /ca-gateway_root --verbose /epics/gateway
 
 ## =========================================
 #  4th stage: Finally put together our image
-#             from scratch for minimal size.
-FROM alpine:latest AS final
+#    ubuntu works with k8s dns, alpine does not
+FROM ubuntu:22.04 AS final
 
-USER scs
+USER epics
 
 COPY --from=dockerizer /ca-gateway_root /
 
