@@ -3,8 +3,7 @@ FROM baltig.infn.it:4567/epics-containers/epics-base AS builder
 ARG REVISION=R2-1-3-0 
 
 
-RUN apt-get update -y && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends build-essential git ca-certificates
+
 # Download the EPICS CA Gateway
 RUN git clone --branch ${REVISION} --depth 1 -c advice.detachedHead=false \
       https://github.com/epics-extensions/ca-gateway.git /ca-gateway
