@@ -8,11 +8,17 @@ RUN apt-get update -y && apt-get upgrade -y && \
 # Download the EPICS CA Gateway
 RUN git clone --branch ${REVISION} --depth 1 -c advice.detachedHead=false \
       https://github.com/epics-extensions/ca-gateway.git /ca-gateway
-RUN rm -rf /ca-gateway/.git
+RUN git clone https://github.com/epics-modules/pcas.git /pcas
+RUN cd /pcas \
+ && echo "EPICS_BASE=/epics/epics-base" > configure/RELEASE.local \
+ && echo "INSTALL_LOCATION=/epics/pcas" > configure/CONFIG_SITE.local \
+ && make -j$(nproc) && make clean
+
+RUN rm -rf /ca-gateway/.git /pcas/.git
 
 RUN cd /ca-gateway \
- && echo "EPICS_BASE=/epics/base" > configure/RELEASE.local \
- && echo "PCAS=/epics/base/modules/pcas" >> configure/RELEASE.local \
+ && echo "EPICS_BASE=/epics/epics-base" > configure/RELEASE.local \
+ && echo "PCAS=/epics/pcas" >> configure/RELEASE.local \
  && echo "INSTALL_LOCATION=/epics/ca-gateway" > configure/CONFIG_SITE.local \
  && make -j$(nproc) && make clean
 
