@@ -18,7 +18,7 @@ FROM baltig.infn.it:4567/epics-containers/epics-base AS builder
 USER scs
 
 # Download the EPICS CA Gateway
-COPY --chown=scs:users --from=download-extract /ca-gateway /epics/src/ca-gateway
+COPY --from=download-extract /ca-gateway /epics/src/ca-gateway
 RUN cd /epics/src/ca-gateway \
  && echo "EPICS_BASE=/epics/base" > configure/RELEASE.local \
  && echo "PCAS=/epics/base/modules/pcas" >> configure/RELEASE.local \
