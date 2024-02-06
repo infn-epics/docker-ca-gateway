@@ -25,6 +25,7 @@ RUN cd /epics/src/ca-gateway \
  && echo "INSTALL_LOCATION=/epics/ca-gateway" > configure/CONFIG_SITE.local \
  && make -j$(nproc) && make clean
 
+## ===============================
 FROM ubuntu:22.04 AS base
 COPY --from=builder /epics/ /epics
 
