@@ -23,8 +23,10 @@ RUN cd /epics/src/ca-gateway \
  && echo "EPICS_BASE=/epics/base" > configure/RELEASE.local \
  && echo "PCAS=/epics/base/modules/pcas" >> configure/RELEASE.local \
  && echo "INSTALL_LOCATION=/epics/ca-gateway" > configure/CONFIG_SITE.local \
- && make -j$(nproc)
+ && make -j$(nproc) && make clean
 
+FROM ubuntu:22.04 AS base
+COPY --from=builder /epics
 
 CMD ["/epics/ca-gateway/gateway"]
 #CMD ["-h"]
