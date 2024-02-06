@@ -26,7 +26,7 @@ RUN cd /epics/src/ca-gateway \
  && make -j$(nproc) && make clean
 
 FROM ubuntu:22.04 AS base
-COPY --from=builder /epics
+COPY --from=builder /epics/ /epics
 
 CMD ["/epics/ca-gateway/gateway"]
 #CMD ["-h"]
