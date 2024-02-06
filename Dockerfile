@@ -57,7 +57,7 @@ RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/ \
 #    ubuntu works with k8s dns, alpine does not
 FROM ubuntu:22.04 AS final
 
-COPY --from=dockerizer /ca-tools /epics
+COPY --from=dockerizer /ca-tools /
 
 # Does this make sense for gateway? So that providing -cip for the gateway command is optional?
 ENV EPICS_CA_AUTO_ADDR_LIST=YES
