@@ -45,6 +45,10 @@ RUN dockerize -L preserve -n -u scs -o /ca-gateway_root --verbose /epics/gateway
  && find /ca-gateway_root/ -ls \
  && rm /ca-gateway_root/Dockerfile \
  && find / -name "caRepeater" -exec cp {} /ca-gateway_root/epics \; \
+ && find / -name "caget" -exec cp {} /ca-gateway_root/epics \; \
+ && find / -name "caput" -exec cp {} /ca-gateway_root/epics \; \
+&& find / -name "camonitor" -exec cp {} /ca-gateway_root/epics \; \
+
  # /epics is owned by scs in this image and should also be in later one:
  && chown -R scs:users /ca-gateway_root/epics
 
