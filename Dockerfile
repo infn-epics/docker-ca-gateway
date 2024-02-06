@@ -13,10 +13,6 @@ RUN rm -rf /ca-gateway/.git
 #  2nd stage: build the CA Gateway
 FROM baltig.infn.it:4567/epics-containers/epics-base AS builder
 
-# The scs user already exists in base image.
-# We set it here explicitly to clarify file ownership.
-USER scs
-
 # Download the EPICS CA Gateway
 COPY --from=download-extract /ca-gateway /epics/src/ca-gateway
 RUN cd /epics/src/ca-gateway \
