@@ -38,17 +38,17 @@ RUN apt-get update && apt-get install -yq python python-pip rsync \
  && pip install https://github.com/larsks/dockerize/archive/a903419.zip
 
 # Move the executable "gateway" to a more prominent location
-RUN mv /epics/ca-gateway/bin/*/gateway /epics/ 
+RUN mv /epics/ca-gateway/bin/*/gateway /epics/  && find / -name "caRepeater" -exec cp {} /epics \; \
+ && find / -name "caget" -exec cp {} /epics/ \; \
+ && find / -name "caput" -exec cp {} /epics/ \; \
+&& find / -name "camonitor" -exec cp {} /epics/ \; \
 
 
 # Dockerize
-RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/gateway \
+RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/ \
  && find /ca-tools/ -ls \
- && rm /ca-tools/Dockerfile \
- && find / -name "caRepeater" -exec cp {} /ca-tools/ \; \
- && find / -name "caget" -exec cp {} /ca-tools/ \; \
- && find / -name "caput" -exec cp {} /ca-tools/ \; \
-&& find / -name "camonitor" -exec cp {} /ca-tools/ \; \
+ && rm /ca-tools/Dockerfile 
+ 
 
  # /epics is owned by scs in this image and should also be in later one:
  && chown -R scs:users /ca-tools/
@@ -56,11 +56,11 @@ RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/gateway \
 
 
 ## =========================================
-#  4th stage: Finally put together our image
+# les 4th stage: Finally put together our image
 #    ubuntu works with k8s dns, alpine does not
 FROM ubuntu:22.04 AS final
 
-COPY --from=dockerizer /ca-tools /ca-tools
+COPY --from=dockerizer /ca-tools /epics
 
 # Does this make sense for gateway? So that providing -cip for the gateway command is optional?
 ENV EPICS_CA_AUTO_ADDR_LIST=YES
