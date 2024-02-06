@@ -38,7 +38,8 @@ RUN apt-get update && apt-get install -yq python python-pip rsync \
  && pip install https://github.com/larsks/dockerize/archive/a903419.zip
 
 # Move the executable "gateway" to a more prominent location
-RUN mv /epics/ca-gateway/bin/*/gateway /epics/
+RUN mv /epics/ca-gateway/bin/*/gateway /epics/ 
+
 
 # Dockerize
 RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/gateway \
@@ -58,8 +59,6 @@ RUN dockerize -L preserve -n -u scs -o /ca-tools --verbose /epics/gateway \
 #  4th stage: Finally put together our image
 #    ubuntu works with k8s dns, alpine does not
 FROM ubuntu:22.04 AS final
-
-USER scs
 
 COPY --from=dockerizer /ca-tools /ca-tools
 
