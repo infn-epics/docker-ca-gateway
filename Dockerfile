@@ -38,10 +38,11 @@ RUN apt-get update && apt-get install -yq python python-pip rsync \
  && pip install https://github.com/larsks/dockerize/archive/a903419.zip
 
 # Move the executable "gateway" to a more prominent location
-RUN mv /epics/ca-gateway/bin/*/gateway /epics/ ; find / -name "caRepeater" -exec cp {} /epics \; \
+RUN mv /epics/ca-gateway/bin/*/gateway /epics/ 
+RUN find / -name "caRepeater" -exec cp {} /epics \; \
  && find / -name "caget" -exec cp {} /epics/ \; \
  && find / -name "caput" -exec cp {} /epics/ \; \
-&& find / -name "camonitor" -exec cp {} /epics/ \; \
+ && find / -name "camonitor" -exec cp {} /epics/ \; \
 
 
 # Dockerize
