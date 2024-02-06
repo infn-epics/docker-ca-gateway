@@ -13,6 +13,8 @@ RUN rm -rf /ca-gateway/.git
 #  2nd stage: build the CA Gateway
 FROM baltig.infn.it:4567/epics-containers/epics-base AS builder
 
+RUN apt-get update -y && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends build-essential 
 # Download the EPICS CA Gateway
 COPY --from=download-extract /ca-gateway /epics/src/ca-gateway
 RUN cd /epics/src/ca-gateway \
