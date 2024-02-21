@@ -26,7 +26,7 @@ FROM ubuntu:22.04 AS base
 COPY --from=builder /epics/ /epics
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
-    libreadline8 git \
+    libreadline8 git ca-certificates \
     && rm -rf /var/lib/apt/lists/* 
 ARG USER_ID=epics
 ARG USER_UID=1000
