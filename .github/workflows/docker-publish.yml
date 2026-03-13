@@ -1,0 +1,76 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: 'CA Gateway git tag/branch to build (e.g. R2-1-3-0)'
+        required: false
+        default: 'master'
+
+jobs:
+  build-and-push:
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        epics-target: [linux-x86_64]
+        include:
+          - os: ubuntu-latest
+          - epics-target: linux-x86_64
+            extension: ""
+            platform: linux/amd64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io/${{ github.repository_owner }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set REVISION from tag or input
+        id: vars
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "revision=${{ github.event.inputs.revision }}" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${{ github.event.inputs.revision }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "revision=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}${{ matrix.extension }}
+          tags: |
+            type=raw,value=${{ steps.vars.outputs.image_tag }}
+            type=raw,value=latest
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          push: true
+          build-args: |
+            IMAGE_EXT=${{ matrix.extension }}
+            REVISION=${{ steps.vars.outputs.revision }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

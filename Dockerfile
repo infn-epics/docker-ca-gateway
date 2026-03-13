@@ -1,6 +1,11 @@
-
-FROM baltig.infn.it:4567/epics-containers/epics-base AS builder
+ARG IMAGE_EXT
+ARG BASE=7.0.9ec4
+ARG REGISTRY=ghcr.io/epics-containers
+ARG RUNTIME=${REGISTRY}/epics-base${IMAGE_EXT}-runtime:${BASE}
+ARG DEVELOPER=${REGISTRY}/epics-base${IMAGE_EXT}-developer:${BASE}
 ARG REVISION=R2-1-3-0 
+FROM  ${DEVELOPER} AS developer
+ARG REVISION
 
 
 # Download the EPICS CA Gateway
@@ -22,11 +27,11 @@ RUN cd /ca-gateway \
  && make -j$(nproc) && make clean
 
 ## ===============================
-FROM ubuntu:22.04 AS base
-COPY --from=builder /epics/ /epics
+FROM ${RUNTIME} AS base
+COPY --from=developer /epics/ /epics
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
-    libreadline8 git ca-certificates iputils-ping iproute2 telnet \
+    libreadline8t64 git ca-certificates iputils-ping iproute2 telnet \
     && rm -rf /var/lib/apt/lists/* 
 ARG USER_ID=epics
 ARG USER_UID=1000
