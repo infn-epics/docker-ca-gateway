@@ -33,16 +33,14 @@ RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
     libreadline8t64 git ca-certificates iputils-ping iproute2 telnet \
     && rm -rf /var/lib/apt/lists/* 
-ARG USER_ID=epics
 ARG USER_UID=1000
-ARG GROUP_ID=control
 ARG GROUP_UID=1000
 
 
-RUN groupadd -r ${GROUP_ID} -g ${GROUP_UID} && useradd -r -g ${GROUP_ID} -u ${USER_UID} ${USER_ID}
+# RUN groupadd -r ${GROUP_ID} -g ${GROUP_UID} && useradd -r -g ${GROUP_ID} -u ${USER_UID} ${USER_ID}
 
 RUN chown -R ${USER_UID}:${GROUP_UID} /epics
-USER ${USER_ID}
+USER ${USER_UID}
 
 ENV PATH=/epics/ca-gateway/bin/linux-x86_64/:/epics/epics-base/bin/linux-x86_64/:$PATH
 CMD ["/epics/ca-gateway/bin/linux-x86_64/gateway"]
